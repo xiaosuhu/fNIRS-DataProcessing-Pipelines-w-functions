@@ -1,11 +1,16 @@
-function plot3Dbrain_Ver2021_wlabel(intensity,onlypositive,p,coordfile)
+function plot3Dbrain_Ver2021_wlabel(intensity,onlypositive,p,coordfile,flex_scale)
 
 coord=load(coordfile,'-mat'); % Load Coordinates - now need to specify names stroing the data
 fieldname=fields(coord);
 CHMNI=eval(['coord.',fieldname{1}]);
 
-mx=2;
-mn=-2;
+if flex_scale == 1
+    mx=max(intensity)+1;
+    mn=min(intensity)-1;
+else
+    mx = 4;
+    mn = -4;
+end
 
 % remove the negative intensity associated ind
 if onlypositive

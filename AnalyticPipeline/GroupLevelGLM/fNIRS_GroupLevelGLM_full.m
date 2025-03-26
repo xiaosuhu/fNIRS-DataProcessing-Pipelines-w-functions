@@ -31,29 +31,3 @@ grouplevelpipeline.formula ='beta ~ -1 + cond + (1|Subject)';
 GroupStats= grouplevelpipeline.run(SubjStats);
 % draw the results
 % GroupStats.draw('tstat',[-4 4]);
-
-%% Contrast 
-
-c = [1 0 0]; % contrast vector
-Contrast = GroupStats.ttest(c);
-Contrast_table = Contrast.table; % convert the contrast results to a table
-
-
-%% Plot on 3D brain for hbo result
-beta_oi = Contrast_table.tstat(1:2:end-1);
-p_oi = Contrast_table.q(1:2:end-1);
-
-intensity = beta_oi;
-p=p_oi;
-onlypositive = 1;
-
-figure('Color',[1 1 1])
-
-subplot(1,2,1)
-plot3Dbrain_Ver2021(intensity,onlypositive,p,'Orig_32.mat') % Orig_32.mat will be a matrix containing the MNI coordinates
-
-subplot(1,2,2)
-plot3Dbrain_Ver2021(intensity,onlypositive,p,'Orig_32.mat')
-view(90,0)
-
-

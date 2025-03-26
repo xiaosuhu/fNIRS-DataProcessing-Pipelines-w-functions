@@ -33,19 +33,29 @@ disp('Adding SS to the pipeline...')
 j_ss = nirs.modules.LabelShortSeperation();
 rawdata = j_ss.run(rawdata);
 
+% optical density conversion
+disp('Converting Optical Density...')
+odconv=nirs.modules.OpticalDensity();
+od=odconv.run(rawdata);
+
+% Optional TDDR motion correction
+disp('TDDR step...')
+tddr = nirs.modules.TDDR();
+tddr.usePCA = 1; 
+od=tddr.run(od);
+
+% Downsample the data
 disp('Running data resample...')
 resample=nirs.modules.Resample();
 resample.Fs=2; % Resample the data to 2 Hz
-downraw=resample.run(rawdata);
+downod=resample.run(od);
 
-disp('Converting Optical Density...')
-odconv=nirs.modules.OpticalDensity();
-od=odconv.run(downraw);
-
+% Modified Beer-Lambert law to get HbO and HbR data
 disp('Applying  Modified Beer Lambert Law...')
 mbll=nirs.modules.BeerLambertLaw();
-hb=mbll.run(od);
+hb=mbll.run(downod);
 
+% Trimming the timeseries to remove the unnecessary sections
 disp('Trimming .nirs files...')
 trim=nirs.modules.TrimBaseline();
 trim.preBaseline=5; % 5 sec before the first stim
@@ -64,8 +74,10 @@ firstlevelglm.AddShortSepRegressors = true; % SS channel set up
 firstlevelbasis = nirs.design.basis.Canonical();
 % Adding temporal & dispersion derivatives to canonical HRF function
 % firstlevelbasis.incDeriv=1;
+
 % DCT matrix to account for signal drift over time
 % firstlevelglm.trend_func=@(t) nirs.design.trend.dctmtx(t,0.008);
+
 % HRF peak time = 6s based on Friederici and Booth papers (e.g. Brauer, Neumann & Friederici, 2008, NeuroImage)
 firstlevelbasis.peakTime = 6;
 
@@ -79,17 +91,11 @@ disp('Done!')
 
 %% Add Age & Gender for demographic as example
 % the path to a csv file containing demographics
+% NOTE:if you are using mac, you may gets an error when reading the table
 
 % Method 1
 % Demo1 = nirs.modules.AddDemographics();
-% Demo1.demoTable = readtable('F:\MatlabBackUp\PROJECT_HH_R01\TOM_modeling_behavior/LangLit Data 2023.xlsx','Sheet', 'Behavioral');
+% Demo1.demoTable = readtable('./demo.csv');
 % Demo1.varToMatch='Subject';
 % SubjStats = Demo1.run(SubjStats);
-
-% Method 2
-% Grouping = readtable('./Behave.csv');
-% Demo = nirs.modules.AddDemographics();
-% Demo.demoTable = Grouping;
-% Demo.varToMatch='Subject';
-% SubjStats = Demo.run(SubjStats);
 

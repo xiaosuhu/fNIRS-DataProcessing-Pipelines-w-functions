@@ -5,8 +5,8 @@ fieldname=fields(coord);
 CHMNI=eval(['coord.',fieldname{1}]);
 
 if flex_scale == 1
-    mx=max(intensity)+1;
-    mn=min(intensity)-1;
+    mx=max(intensity)+.01;
+    mn=min(intensity)-.01;
 else
     mx = 4;
     mn = -4;
