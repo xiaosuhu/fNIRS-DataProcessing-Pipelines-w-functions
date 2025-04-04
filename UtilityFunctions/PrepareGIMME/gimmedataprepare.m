@@ -22,27 +22,30 @@ elseif nargin<4
     hbohbr=1;
     option=1;
     downsamplerate=2;
-
+    
 elseif nargin<5
     option=1;
     downsamplerate=2;
-
+    
 elseif nargin<6
     downsamplerate=2;
 end
 
 %% Load Data
-raw = nirs.io.loadDirectory(datadir,{'subject'});
+raw = nirs.io.loadDirectory(datadir,{'Subject'});
 
 %%Processing, using Spline and OLS canonical response
 j1=nirs.modules.OpticalDensity();
 j2=nirs.modules.BeerLambertLaw();
+j3=nirs.modules.Resample();
+j3.Fs=downsamplerate;
 
 % % runs an PCA motion correction from NIRS toolbox for the data
-% jPCA = nirs.modules.PCAFilter();
-% jPCA.ncomp = .8;
-%
-% % runs the spline interpolation from homer2
+jPCA = nirs.modules.PCAFilter();
+jPCA.ncomp = .8;
+
+%==========================================================
+% % runs the spline interpolation from homer2, somehow this didn't work
 % % Create a job to detect motion artifacts
 % jm = nirs.modules.Run_HOMER2();
 % jm.fcn = 'hmrMotionArtifact';
@@ -58,45 +61,55 @@ j2=nirs.modules.BeerLambertLaw();
 % % jsp.vars.tInc = '<linked>:output-tInc'; % Use the 'tIncCh' output from the previous function
 % jsp.vars.p = .99;
 % % jsp.keepoutputs = true;
+%==========================================================
 
 % Extract a 3D data matrix
 switch option
     case 1
-        j3=nirs.modules.Resample();
-        j3.Fs=downsamplerate;
-
+        
         od=j1.run(raw);
-        %         odPCA=jPCA.run(od);
-        %         odsp=jsp.run(od);
+        odPCA=jPCA.run(od);
+        
         % spline motion correction
         for i=1:length(od)
-            odsp(i)=HomerSpline(od(i));
+            odsp(i)=HomerSpline(odPCA(i));
         end
-
-        oddown=j3.run(od);
+        
+        oddown=j3.run(odsp);
         hb=j2.run(oddown);
-
+        
     case 2
         od=j1.run(raw);
-        %         odPCA=jPCA.run(od);
-        %         odsp=jsp.run(od);
+        odPCA=jPCA.run(od);
+        
         for i=1:length(od)
-            odsp(i)=HomerSpline(od(i));
+            odsp(i)=HomerSpline(odPCA(i));
         end
-        hb=j2.run(od);
+        hb=j2.run(odsp);
+        
         % Data downsample by averaging
-        for i=1:length(hb)
-            mergingperiod=1/downsamplerate*hb(i).Fs;
-            tmpdatamat=hb(i).data;
-            for j=1:size(tmpdatamat,2)
-                for k=1:size(tmpdatamat,1)/mergingperiod
-                    tmpdatamatdown(k,j)=mean(tmpdatamat((k-1)*mergingperiod+1:k*mergingperiod,j));
+
+        for i = 1:length(hb)
+            if abs(round(hb(i).Fs / downsamplerate) - (hb(i).Fs / downsamplerate)) > 1e-3
+                warning('Sampling frequency is not divisible by downsamplerate. Please resample first.');
+            end
+            mergingperiod = round(hb(i).Fs / downsamplerate); % force integer
+            tmpdatamat = hb(i).data;
+            num_segments = floor(size(tmpdatamat,1) / mergingperiod);
+            tmpdatamatdown = zeros(num_segments, size(tmpdatamat,2));
+            
+            for j = 1:size(tmpdatamat,2) % loop over channels
+                for k = 1:num_segments
+                    idx_start = (k-1)*mergingperiod + 1;
+                    idx_end = k*mergingperiod;
+                    tmpdatamatdown(k,j) = mean(tmpdatamat(idx_start:idx_end, j));
                 end
             end
-            hb(i).data=tmpdatamatdown;
+            
+            hb(i).data = tmpdatamatdown;
             disp('one file completed...');
         end
-
+        
         % Implement the pipeline
 end
 
@@ -109,7 +122,7 @@ function GIMMEdataExtract(data,COI,hbohbr,norml)
 
 for i=1:length(data)
     clearvars R_data hboind hbrind;
-
+    
     % find COI
     switch hbohbr
         case 1
@@ -119,14 +132,14 @@ for i=1:length(data)
             hbrind=find(strcmp(data(i).probe.link.type,'hbr'));
             COImatch=hbrind(COI);
     end
-
+    
     for j=1:length(COImatch)
         R_data(:,j)=data(i).data(:,COImatch(j));
         if norml
             R_data(:,j)=normalize(R_data(:,j),'scale');
         end
     end
-
+    
     [~,filename,~] = fileparts(data(i).description);
     save(strcat('GIMME_data_',filename,'.txt'),'R_data','-ascii','-tabs');
 end
@@ -135,22 +148,22 @@ end
 
 
 function dodsp=HomerSpline(od)
-    % % Create a job to detect motion artifacts
-    SD=nirs.util.probe2sd(od.probe);
-    tIncMan=ones(size(od.data,1),size(od.data,2));
-    tMotion = .5;
-    tMask = 2;
-    STDEVthresh = 14;
-    AMPthresh = .2;
+% % Create a job to detect motion artifacts
+SD=nirs.util.probe2sd(od.probe);
+tIncMan=ones(size(od.data,1),size(od.data,2));
+tMotion = .5;
+tMask = 2;
+STDEVthresh = 14;
+AMPthresh = .2;
 %     tInc = hmrMotionArtifact(od.data, od.Fs, SD, tIncMan, tMotion, tMask, STDEVthresh, AMPthresh);
-    [~,tIncCh] = hmrMotionArtifactByChannel(od.data, od.Fs, SD, tIncMan, tMotion, tMask, STDEVthresh, AMPthresh);
+[~,tIncCh] = hmrMotionArtifactByChannel(od.data, od.Fs, SD, tIncMan, tMotion, tMask, STDEVthresh, AMPthresh);
 
-    % % Add on a job to remove artifacts using previously-detected time points
-    p=.99;
-    dodSpline = hmrMotionCorrectSpline(od.data, od.time, SD, tIncCh, p);
+% % Add on a job to remove artifacts using previously-detected time points
+p=.99;
+dodSpline = hmrMotionCorrectSpline(od.data, od.time, SD, tIncCh, p);
 
-    dodsp=od;
-    dodsp.data=dodSpline;
-    disp('one data corrected');
+dodsp=od;
+dodsp.data=dodSpline;
+disp('one data corrected');
 
 end

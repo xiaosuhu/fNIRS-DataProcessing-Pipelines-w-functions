@@ -1,4 +1,4 @@
-function plot3Dbrain(intensity,onlypositive,p,coordfile)
+function plot3Dbrain_withLabel(intensity,onlypositive,p,coordfile)
 
 coord=load(coordfile,'-mat'); % Load Coordinates - now need to specify names stroing the data
 fieldname=fields(coord);
