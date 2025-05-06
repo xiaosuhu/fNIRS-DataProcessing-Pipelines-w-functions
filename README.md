@@ -4,8 +4,6 @@ This repository contains different MATLAB scripts for fNIRS data processing pipe
 
 **NOTE**: You will need to first install **NIRS toolbox** (see [Installation](#installation) for details) in MATLAB in order to run these pipelines.
 
-<img src="fNIRS-analysis-logo.webp" alt="Project Logo" width="400">
-
 <p align="left">
   <img src="https://img.shields.io/badge/version-0.1-blue" alt="Version Badge">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License Badge">
