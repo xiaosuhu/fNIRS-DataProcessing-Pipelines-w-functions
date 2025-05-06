@@ -15,19 +15,21 @@
 grouplevelpipeline = nirs.modules.MixedEffects();
 % to use robust regression also for the group level, but will take longer time
 % grouplevelpipeline.robust=true; 
-grouplevelpipeline.dummycoding = 'full';
+grouplevelpipeline.dummyCoding = 'full';
 
-grouplevelpipeline.formula ='beta ~ -1 + cond + (1|Subject)';
-% categorial variable 
-% grouplevelpipeline.formula ='beta ~ -1 + group:cond + (1|Subject)';
-% grouplevelpipeline.formula ='beta ~ -1 + group:task:cond + (1|Subject)';
+% grouplevelpipeline.formula ='beta ~ -1 + cond + (1|Subject)';
 
-% add controlling variable for the intercept
-% grouplevelpipeline.formula ='beta ~ -1 + group:task:cond + age + (1|Subject)';
+%% categorial variable 
+% grouplevelpipeline.formula ='beta ~ -1 + Group:cond + (1|Subject)';
 
-% add controlling variable for the slope
-% grouplevelpipeline.formula ='beta ~ -1 + group:task:cond + (age|Subject)';
+%% add controlling variable for the intercept
+grouplevelpipeline.formula ='beta ~ -1 + Group:cond + Age + (1|Subject)';
 
+%% add controlling variable for the slope
+% grouplevelpipeline.formula ='beta ~ -1 + Group:cond + (age|Subject)';
+
+%%
 GroupStats= grouplevelpipeline.run(SubjStats);
-% draw the results
+
+% draw the results - simple version
 % GroupStats.draw('tstat',[-4 4]);

@@ -83,6 +83,8 @@ The analysis of fNIRS data follows these steps:
 
 4. **Visualization**  
    - Finally, results can be plotted for interpretation and reporting.  
+   ![Here is an example of the 3D plot for the results, see the code in ResultsPlloting folder](./Example_plot.png)
+
 
 ## Group Level Formula  
 

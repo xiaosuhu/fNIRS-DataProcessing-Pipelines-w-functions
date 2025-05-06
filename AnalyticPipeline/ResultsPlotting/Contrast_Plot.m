@@ -27,22 +27,22 @@
 
 % By Frank Hu, 3/26/2025
 
-%% Plot on 3D brain for hbo result
-c = [1 0];
+%% Plot on 3D brain for hbo result -- Now this is based on the sample data
+% see group level and first level analysis for how to get GroupStats
+c = [1 0 0 0 0 0 0]; % This is to get the age related correlation
 fdr = 0;
 type = 'hbo';
-flex_scale = 0;
-coord_file = 'path-to-your-coordfile.mat';
+onlypositive = 1;
+coord_file = './Example_dataset/MNICoord_for_Plot/Orig_32.mat';
 
 [intensity,p] = getIntensity(c,GroupStats,fdr,type);
 
-onlypositive = 1;
 
 figure('Color',[1 1 1]) % Specifies a white background
 
 subplot(1,2,1)
-plot3Dbrain_Ver2021(intensity,onlypositive,p,coord_file,flex_scale) % Orig_32.mat will be a matrix containing the MNI coordinates
+plot3Dbrain_Ver2021(intensity,onlypositive,p,coord_file,'mx',4,'mn',-4); % mx and mn is the max and min scale for the plot
 
 subplot(1,2,2)
-plot3Dbrain_Ver2021(intensity,onlypositive,p,coord_file,flex_scale)
+plot3Dbrain_Ver2021(intensity,onlypositive,p,coord_file,'mx',4,'mn',-4);
 view(90,0)

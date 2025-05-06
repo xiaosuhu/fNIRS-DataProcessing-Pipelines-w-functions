@@ -24,8 +24,8 @@ datadir = uigetdir();
 %load Data with different levels, the group task and subjet will be used as
 %demographics
 % rawdata = nirs.io.loadDirectory(datadir, {'Group', 'Task', 'Subject'});
-% rawdata = nirs.io.loadDirectory(datadir, {'Group','Subject'});
-rawdata = nirs.io.loadDirectory(datadir, {'Subject'});
+rawdata = nirs.io.loadDirectory(datadir, {'Group','Subject'});
+% rawdata = nirs.io.loadDirectory(datadir, {'Subject'});
 
 %% Initialize GLM (Subject-Level) 
 % label short separation channels if you use SS in your data collection
@@ -93,9 +93,8 @@ disp('Done!')
 % the path to a csv file containing demographics
 % NOTE:if you are using mac, you may gets an error when reading the table
 
-% Method 1
-% Demo1 = nirs.modules.AddDemographics();
-% Demo1.demoTable = readtable('./demo.csv');
-% Demo1.varToMatch='Subject';
-% SubjStats = Demo1.run(SubjStats);
+Demo = nirs.modules.AddDemographics();
+Demo.demoTable = readtable('./Demographic_fake.csv');
+Demo.varToMatch='Subject';
+SubjStats = Demo.run(SubjStats);
 
