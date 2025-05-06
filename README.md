@@ -82,7 +82,7 @@ The analysis of fNIRS data follows these steps:
      - **t-test** with proper contrasts  
 
 4. **Visualization**  
-   - Finally, results can be plotted for interpretation and reporting.  
+   - Finally, results can be plotted for interpretation and reporting (see the code in ResultsPlloting folder).  
    ![Here is an example of the 3D plot for the results, see the code in ResultsPlloting folder](./Example_plot.png)
 
 
