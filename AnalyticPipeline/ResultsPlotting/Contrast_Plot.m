@@ -10,26 +10,39 @@
 % to the design matrix of your model. Each element of the vector corresponds to 
 % one regressor (or column) in your design matrix. The values in the vector (e.g., 1, -1, 0) 
 % define how much each regressor contributes to the contrast.
-%% Contrast 
+%%
+% I have made a function that takes in contrast vector and group level
+% stats and return intensity and p(q) values for plotting
 
-c = [1 0 0]; % contrast vector
-Contrast = GroupStats.ttest(c);
-Contrast_table = Contrast.table; % convert the contrast results to a table
+% function [intensity,p] = getIntensity(c,GroupStats,fdr,type)
 
+% This function does contrast and extract t-value and associated threshold
+% p, or q(fdr corrected p)
+
+% Input:
+% c: contrast vector
+% GroupStats: group level stats
+% fdr: 1 or 0, 1= fdr
+% type: 'hbo' or 'hbr'
+
+% By Frank Hu, 3/26/2025
 
 %% Plot on 3D brain for hbo result
-beta_oi = Contrast_table.tstat(1:2:end-1);
-p_oi = Contrast_table.q(1:2:end-1);
+c = [1 0];
+fdr = 0;
+type = 'hbo';
+flex_scale = 0;
+coord_file = 'path-to-your-coordfile.mat';
 
-intensity = beta_oi;
-p=p_oi;
+[intensity,p] = getIntensity(c,GroupStats,fdr,type);
+
 onlypositive = 1;
 
-figure('Color',[1 1 1])
+figure('Color',[1 1 1]) % Specifies a white background
 
 subplot(1,2,1)
-plot3Dbrain_Ver2021(intensity,onlypositive,p,'Orig_32.mat') % Orig_32.mat will be a matrix containing the MNI coordinates
+plot3Dbrain_Ver2021(intensity,onlypositive,p,coord_file,flex_scale) % Orig_32.mat will be a matrix containing the MNI coordinates
 
 subplot(1,2,2)
-plot3Dbrain_Ver2021(intensity,onlypositive,p,'Orig_32.mat')
+plot3Dbrain_Ver2021(intensity,onlypositive,p,coord_file,flex_scale)
 view(90,0)

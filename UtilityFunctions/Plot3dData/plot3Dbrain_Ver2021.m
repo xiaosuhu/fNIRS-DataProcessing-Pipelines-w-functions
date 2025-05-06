@@ -1,15 +1,26 @@
-function plot3Dbrain_Ver2021(intensity,onlypositive,p,coordfile,flex_scale)
+function plot3Dbrain_Ver2021(intensity,onlypositive,p,coordfile,varargin)
 
 coord=load(coordfile,'-mat'); % Load Coordinates - now need to specify names stroing the data
 fieldname=fields(coord);
 CHMNI=eval(['coord.',fieldname{1}]);
 
-if flex_scale == 1
-    mx=max(intensity)+.01;
-    mn=min(intensity)-.01;
-else
-    mx = 4;
-    mn = -4;
+% default scale
+mx = 4;
+mn = -4;
+
+% Parse name-value pairs
+for i = 1:2:length(varargin)
+    name = lower(varargin{i});
+    value = varargin{i+1};
+    
+    switch name
+        case 'mx'
+            mx = value;
+        case 'mn'
+            mn = value;
+        otherwise
+            error('Unknown parameter name: %s', name);
+    end
 end
 
 % remove the negative intensity associated ind
@@ -19,7 +30,7 @@ else
     negind=[];
 end
 
-insigind=find(p>.05);
+insigind=find(p>.5);
 
 if ~isempty(negind)
     try
