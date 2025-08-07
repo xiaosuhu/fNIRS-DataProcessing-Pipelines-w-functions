@@ -1,5 +1,8 @@
 function plot3Dbrain_Ver2021(intensity,onlypositive,p,coordfile,varargin)
 
+% to use varargin:
+% e.g. plot3Dbrain_Ver2021(max_idx_fixed,onlypositive,pseudo_p,coordfile,'mx', 25, 'mn', 0);
+
 coord=load(coordfile,'-mat'); % Load Coordinates - now need to specify names stroing the data
 fieldname=fields(coord);
 CHMNI=eval(['coord.',fieldname{1}]);
@@ -30,7 +33,7 @@ else
     negind=[];
 end
 
-insigind=find(p>.5);
+insigind=find(p>.05);
 
 if ~isempty(negind)
     try
