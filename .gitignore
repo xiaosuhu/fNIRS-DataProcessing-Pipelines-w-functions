@@ -32,3 +32,6 @@ octave-workspace
 
 # mac file
 .DS_Store
+
+#
+._*
