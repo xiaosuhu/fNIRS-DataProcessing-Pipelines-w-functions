@@ -100,7 +100,10 @@ groupPatient = difference between Patient vs. Control (at cond A).
 condB = difference between cond B vs. cond A (in Control).  
 groupPatient:condB = additional interaction effect (difference-in-differences).  
 So coefficients are comparisons to baseline.  
-
+Formula:
+```matlab
+beta ~ group*cond + age + (1|Subject)
+```
 
 2. **Full**
 Used when you don't want reference level, all combinations of categorical predictors are included as separate regressors. e.g.  
@@ -110,6 +113,10 @@ GroupControl:condA = mean beta for Control–A.
 GroupControl:condB = mean beta for Control–B.  
 GroupPatient:condA = mean beta for Patient–A.  
 GroupPatient:condB = mean beta for Patient–B.  
+Formula:
+```matlab
+beta ~ -1 + group:cond + age + (1|Subject)
+```
 
 ## Finite Impulse Response (FIR) Analysis
 
