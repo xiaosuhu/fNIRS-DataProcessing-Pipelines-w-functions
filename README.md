@@ -91,8 +91,8 @@ The group-level analysis uses **Wilkinson Notation** to represent equations in a
 
 This notation is commonly used in statistical modeling to define relationships between variables concisely.
 
-Note: There is two options for dummycoding the grouplevel: "reference" and "full", Ted's preference is using "full"
-1. **Reference**
+Note: There is **TWO** options for dummycoding the grouplevel: "reference" and "full", Ted's preference is using "full"
+1. **Reference (ANOVA/ANCOVA)**
 Used when you want to treat one level of each categorical variable (factor) is treated as the baseline (reference). e.g.  
 If Group = {Control, Patient} and cond = {A, B}, then:  
 Intercept = mean of reference group (say, Control, cond A).  

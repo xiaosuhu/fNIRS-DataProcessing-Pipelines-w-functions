@@ -16,12 +16,17 @@ grouplevelpipeline = nirs.modules.MixedEffects();
 % grouplevelpipeline.robust=true; 
 grouplevelpipeline.dummycoding = 'reference';
 
-% ANOVA in LME way
+%% mixed ANCOVA with random effect
 grouplevelpipeline.formula ='beta ~ group*cond + age + (1|Subject)';
 
-% add controlling variable for the slope
+%% NOTE if you remove age and reandom effect, this will become a standard
+% ANOVA
+% grouplevelpipeline.formula ='beta ~ group*cond';
+
+%% add controlling variable for the slope
 % grouplevelpipeline.formula ='beta ~ -1 + group*task*cond + (age|Subject)';
 
+%%
 GroupStats= grouplevelpipeline.run(SubjStats);
 % draw the results
 % GroupStats.draw('tstat',[-4 4]);
