@@ -8,7 +8,12 @@
 
 % 1. Group Level (2nd) GLM (mixed effects)
 % 2. Group Contrasts & Statistics
-% 3. ANOVA
+
+%% Group level outlier remove
+ol = nirs.modules.RemoveOutlierSubjects();
+ol.cutoff = 0.25; % I am making a 0.25 here just for demostration purpose, in practice you will never put a 0.25 here, usually it is 0.05 or 0.01
+% ol.cutoff = 0.05;
+SubjStats_ol = ol.run(SubjStats);
 
 %% GLM group level analyses (mixed effects) - dummy coding = full
 % Initalize GLM

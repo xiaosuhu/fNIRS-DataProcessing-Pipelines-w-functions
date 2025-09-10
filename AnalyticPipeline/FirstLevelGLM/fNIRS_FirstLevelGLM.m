@@ -62,6 +62,9 @@ trim.preBaseline=5; % 5 sec before the first stim
 trim.postBaseline=5; % 5 sec after the last stim
 hb_trim=trim.run(hb);
 
+% Optional SNR check with the hb data
+SNR = SNR_check(hb_trim);
+
 % save('Data_preprocessed_hb.mat','hb_trim','-v7.3','-nocompression')
 
 %% First level analysis
