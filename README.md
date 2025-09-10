@@ -23,9 +23,8 @@ This repository contains different MATLAB scripts for fNIRS data processing pipe
 
 ## Features
 ✔️ First-level GLM analysis  
-✔️ First-level FIR analysis  
-✔️ Second-level (group-level) analysis  
-✔️ GPU acceleration for first-level analysis  
+✔️ Second-level (group-level) analysis
+✔️ 3D plotting of brain activation 
 
 ## Installation
 
@@ -51,15 +50,15 @@ For detailed examples, refer to:
 
 ## NIRS Data Quality Control
 1. Signal-to-noise-ratio (SNR)
-2. Oxy-deoxy anti (cross) correlation check
-   - Because deoxy is usually slower than oxy (a few seconds), thus a cross correlation with lags might be used
-   - Oxy response is usually 3-4 times larger in scale than de-oxy response 
-3. Cardiac response in the signal (maybe able to use scalp coupling index to check)
-4. Motion artifact check
+2. Cardiac response in the signal (with NIRx this can be done visually)
+3. Motion artifact correction with nirstoolbox
    - Wavelet
    - PCA
-   - Spline interpolation 
    - TDDR 
+4. Oxy-deoxy anti (cross) correlation check
+   - Because deoxy is usually slower than oxy (a few seconds), thus a cross correlation with lags might be used
+   - Oxy response is usually 3-4 times larger in scale than de-oxy response 
+   - We DO NOT uaually do this in practice because it is very hard to set a threshold
 
 ## Analysis Workflow
 
