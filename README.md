@@ -91,6 +91,26 @@ The group-level analysis uses **Wilkinson Notation** to represent equations in a
 
 This notation is commonly used in statistical modeling to define relationships between variables concisely.
 
+Note: There is two options for dummycoding the grouplevel: "reference" and "full", Ted's preference is using "full"
+1. **Reference**
+Used when you want to treat one level of each categorical variable (factor) is treated as the baseline (reference). e.g.  
+If Group = {Control, Patient} and cond = {A, B}, then:  
+Intercept = mean of reference group (say, Control, cond A).  
+groupPatient = difference between Patient vs. Control (at cond A).  
+condB = difference between cond B vs. cond A (in Control).  
+groupPatient:condB = additional interaction effect (difference-in-differences).  
+So coefficients are comparisons to baseline.  
+
+
+2. **Full**
+Used when you don't want reference level, all combinations of categorical predictors are included as separate regressors. e.g.  
+No reference level — all combinations of categorical predictors are included as separate regressors.  
+If Group = {Control, Patient} and cond = {A, B}, then:  
+GroupControl:condA = mean beta for Control–A.  
+GroupControl:condB = mean beta for Control–B.  
+GroupPatient:condA = mean beta for Patient–A.  
+GroupPatient:condB = mean beta for Patient–B.  
+
 ## Finite Impulse Response (FIR) Analysis
 
 The FIR analysis is used for estimation of the hemodynamic response based on impulse stimuli. The idea is to deconvolve the stimulus response out from the real data based on the stimulus marks.

@@ -29,7 +29,7 @@
 
 %% Plot on 3D brain for hbo result -- Now this is based on the sample data
 % see group level and first level analysis for how to get GroupStats
-c = [1 0 0 0 0 0 0]; % This is to get the age related correlation
+c = [0 0 1 0 0 0 0]; % This is to get the age related correlation
 fdr = 0;
 type = 'hbo';
 onlypositive = 1;

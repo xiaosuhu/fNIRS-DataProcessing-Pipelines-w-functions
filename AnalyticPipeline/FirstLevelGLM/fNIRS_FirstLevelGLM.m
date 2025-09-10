@@ -38,11 +38,21 @@ disp('Converting Optical Density...')
 odconv=nirs.modules.OpticalDensity();
 od=odconv.run(rawdata);
 
-% Optional TDDR motion correction
+% OPTIONAL TDDR motion correction
 disp('TDDR step...')
 tddr = nirs.modules.TDDR();
 tddr.usePCA = 1; 
 od=tddr.run(od);
+
+% % OPTIONAL PCA
+% disp('PCA step...')
+% pca = nirs.modules.PCAFilter();
+% od=pca.run(od);
+% 
+% % OPTIONAL WAVELET
+% disp('Wavelet step ...')
+% wavelet = nirs.modules.WaveletFilter();
+% od = wavelet.run(od);
 
 % Downsample the data
 disp('Running data resample...')
@@ -97,7 +107,7 @@ disp('Done!')
 % NOTE:if you are using mac, you may gets an error when reading the table
 
 Demo = nirs.modules.AddDemographics();
-Demo.demoTable = readtable('./Demographic_fake.csv');
+Demo.demoTable = readtable('./Example_dataset/Demographic_fake.csv');
 Demo.varToMatch='Subject';
 SubjStats = Demo.run(SubjStats);
 
