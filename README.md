@@ -23,7 +23,7 @@ This repository contains different MATLAB scripts for fNIRS data processing pipe
 
 ## Features
 ✔️ First-level GLM analysis  
-✔️ Second-level (group-level) analysis
+✔️ Second-level (group-level) analysis  
 ✔️ 3D plotting of brain activation 
 
 ## Installation
